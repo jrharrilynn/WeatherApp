@@ -1,16 +1,30 @@
-
-<section class="topText">
-    <div class="container">
-        <h1 class="header">Weather App</h1>
-        <form>
-            <input type="text" placeholder="Search for a city" autofocus>
-            <button type="submit">SUBMIT</button>
-            <span class="msg"></span>
-        </form>
-    </div>
-</section>
-<section class="ajax-section">
-    <div class="container">
-        <ul class="cities"></ul>
-    </div>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <title>Weather App</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="app-wrap">
+        <header>
+            <input type="text" autocomplete="off" class="search-box"
+            placeholder="search for a city..." />
+        </header>
+        <main>
+            <section class="location">
+                <div class="city"> Lexington, US</div>
+                <div class="date">Sunday 9, May, 2021</div>
+            </section>
+            <div class="current">
+                <div class="temp">15<span>°F</span></div>
+                <div class="weather">Sunny</div>
+                <div class="hi-low">55°F / 45°F</div>
+            </div>
+        </main>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>
