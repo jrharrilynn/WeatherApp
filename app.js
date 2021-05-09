@@ -1,48 +1,49 @@
-const form = document.querySelector(".top-banner form");
-const input = document.querySelector(".top-banner input");
-const msg = document.querySelector(".top-banner.msg");
-const list = document.querySelector("ajax-section.cities");
+const api = {
+  key: "9254d209e3a38a0376ca73a56b727fbd",
+  base: "https://api.openweathermap.org/data/2.5/"
+}
 
+const searchbox = document.querySelector('.search-box');
+searchbox,addEventListener('keypress', setQuery);
 
-const apiKey= "9254d209e3a38a0376ca73a56b727fbd"
+function setQuery(evt) {
+  if(evt.keyCode == 13) {
+    getResults(searchbox.value);
+  }
+}
 
-form.addEventListener("submit", e => {
-  e.preventDefault();
-  const listItems = list.querySelectorAll(".ajax-section .city");
-  const inputVal = input.value;
+function getResults (query) {
+  fetch(`${api.base}weather?q=${query}&units=imperial&APPID=${api.key}`)
+    .then(weather => {
+      return weather.json();
+    }).then(displayResults);
+}
 
-  //ajax here
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${apiKey}&units=metric`;
+function displayResults (weather) {
+  let city = document.querySelector('.location .city');
+  city.innerText = `${weather.name}, ${weather.sys.country}`;
 
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const { main, name, sys, weather } = data;
-      const icon = `https://openweathermap.org/img/wn/${
-        weather[0]["icon"]
-      }@2x.png`;
+  let now = new Date();
+  let date = document.querySelector('.location .date');
+  date.innerText = dateBuilder(now);
 
-      const li = document.createElement("li");
-      li.classList.add("city");
-      const markup = `
-        <h2 class="city-name" data-name="${name},${sys.country}">
-          <span>${name}</span>
-          <sup>${sys.country}</sup>
-        </h2>
-        <div class="city-temp">${Math.round(main.temp)}<sup>°C</sup></div>
-        <figure>
-          <img class="city-icon" src=${icon} alt=${weather[0]["main"]}>
-          <figcaption>${weather[0]["description"]}</figcaption>
-        </figure>
-      `;
-      li.innerHTML = markup;
-      list.appendChild(li);
-    })
-    .catch(() => {
-      msg.textContent = "Please search for a valid city 😩";
-    });
+  let temp = document.querySelector('.current .temp');
+  temp.innerHTML = `${Math.round(weather.main.temp)}<span>°F</span>`;
 
-  msg.textContent = "";
-  form.reset();
-  input.focus();
-});
+  let weather_el = document.querySelector('.current .weather');
+  weather_el.innerText = weather.weather[0].main;
+
+  let hilow = document.querySelector('.hi-low');
+  hilow.innerText = `${Math.round(weather.main.temp_min)}°F / ${Math.round(weather.main.temp_max)}°F`;
+}
+function dateBuilder (d) {
+  let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+  let day = days[d.getDay()];
+  let date = d.getDate();
+  let month = months[d.getMonth()];
+  let year = d.getFullYear();
+
+  return `${day} ${date} ${month} ${year}`;
+}
